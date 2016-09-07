@@ -23,8 +23,11 @@ To check output of jobs, edit CheckErrorsDelphes.py (check ROOT file directory p
 python -u CheckErrorsDelphes.py /path/to/logs/ --pileup <0,200>PU --verbose <0,1> --resubmit <0,1> --resub_num <-1,0,1,2>
 
 This will check for three types of failures (give as resub_num argument)
+
 0. Explicit failure of xrdcp, printed in the log file
+
 1. ROOT file in EOS with zero size. NOTE: have to hardcode the month expected in ls -l
+
 2. No ROOT file with the expected name in EOS. NOTE: hardcode the path if its name differs from the log directory
 
 -1 will resubmit all types of failures.
