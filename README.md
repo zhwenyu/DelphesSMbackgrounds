@@ -1,5 +1,15 @@
 # DelphesSMbackgrounds
 
+These scripts facilitate submitting HTCondor jobs that process a defined set of LHE or GEN input files through Delphes tag 3.4.2pre05 on the FNAL LPC cluster. Changes to the input file name structure, Delphes tag, or cluster will require edits.
+
+To create a new Delphes area: https://twiki.cern.ch/twiki/bin/view/CMS/DelphesUPG
+If running on LHE: compile DelphesPythia8 and copy configLHE_jetmatchning.cmnd into the delphes directory before creating a tarball.
+
+LHE-input scripts: submitCondor.py, LHEtoDelphes.sh
+GEN-input scripts: submitCondor_gen.py GENtoDelphes.sh
+
+CHECK ALL YOUR SCRIPTS BEFORE RUNNING, MAKE NO ASSUMPTIONS!
+
 ----------------------------------------------------------
 
 To SUBMIT condor jobs at the LPC:
@@ -11,10 +21,13 @@ In this file, set output directories and choose samples
 
 ---------------------------------------------------------
 
-EXECUTABLE: LHEtoDelphes.sh
+EXECUTABLE: LHEtoDelphes.sh, GENtoDelphes.sh
 
-No need to change this file! Can control card, number of events, etc, from here.
+Check CMSSW releases and locations of tarball and minBias file, they are not arguments.
+Can control card, number of events, etc, from here.
 This script does xrdcp from EOS, runs Pythia, and runs Delphes. 
+
+NOTE: check which minBias file your delphes card is set to use!! Re-tar after any card edits.
 
 ---------------------------------------------------------
 

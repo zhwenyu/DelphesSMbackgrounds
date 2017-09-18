@@ -2,6 +2,7 @@
 
 #################################### Wrapper submit script for Upgrade production 
 #Written by Alexis Kalogeropoulos - July 2014
+#Adapted by Julie Hogan - summer 2016. jmhogan@fnal.gov
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=slc6_amd64_gcc530
@@ -23,36 +24,36 @@ echo "System release " `cat /etc/redhat-release`
 # Set variables
 runEvents=-1
 skipEvents=0
-detCard=CMS_PhaseII_Substructure_PIX4022_${PILEUP}.tcl
+detCard=CMS_PhaseII_${PILEUP}_v02.tcl
 energy=14
-DelphesVersion=tags/3.3.3pre16
-nPU=`echo $detCard | cut -d '_' -f 5 | cut -d '.' -f 1`
+DelphesVersion=tags/3.4.2pre05
+nPU=`echo $detCard | cut -d '_' -f 2`
 process=`echo $FILENAME | cut -d '_' -f 1-2`
-phase=`echo $detCard | cut -d '_' -f 2`
-configuration=`echo $detCard | cut -d '_' -f 3-4`
+phase=`echo $detCard | cut -d '_' -f 1`
+configuration=`echo $detCard | cut -d '_' -f 3 | cut -d '.' -f 1`
 DelphesOutput=`echo $FILENAME | cut -d '.' -f 1`_${phase}_${configuration}_${nPU}.root
 metaData=`echo $DelphesOutput | sed s/root/txt/`
 
 # make the CMSSW release, compile, and copy
-scram project CMSSW_8_0_4
-cd CMSSW_8_0_4/src
+scram project CMSSW_9_1_0_pre3
+cd CMSSW_9_1_0_pre3/src
 eval `scram runtime -sh`
 cd -
 
 echo "xrdcp source tarball and pileup file"
-xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes333pre16.tar .
+xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes342pre05.tar . #CHECK ME!
 XRDEXIT=$?
 if [[ $XRDEXIT -ne 0 ]]; then
     echo "exit code $XRDEXIT, failure in xrdcp of Delphes.tar"
     exit $XRDEXIT
 fi
 
-tar -xf Delphes333pre16.tar
-cd Delphes
-./configure
-make -j 4
+tar -xf Delphes342pre05.tar
+cd delphes
+#./configure
+#make -j 4
 
-xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/MinBias_100k.pileup .
+xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/MinBias_100k.pileup . #CHECK ME!
 XRDEXIT=$?
 if [[ $XRDEXIT -ne 0 ]]; then
     echo "exit code $XRDEXIT, failure in xrdcp of MinBias_100k.pileup"
@@ -68,7 +69,7 @@ if [[ $XRDEXIT -ne 0 ]]; then
 fi
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Run Pythia8
+# Run DelphesPythia8
 
 lhefile=events.lhe
 echo "Swapping weight index in LHE file ${FILENAME}, unzipping to ${lhefile}"
@@ -80,31 +81,22 @@ sed -i "s/$noweightstring/$weightstring/" ${lhefile}
 nEventsIn=`grep -c '<event>' ${lhefile}`
 echo "=================== There are $nEventsIn events for $lhefile ============================="
 
-cp hadronizer_template.py hadronizer.py
+rm ${FILENAME}
 
-sed -i "s|RUNEVENTS|${runEvents}|g" hadronizer.py
-sed -i "s|SKIPEVENTS|${skipEvents}|g" hadronizer.py
-sed -i "s|SETLHEFILENAME|${lhefile}|g" hadronizer.py
-sed -i "s|SETQCUT|${QCUT}|g" hadronizer.py
-sed -i "s|SETMAXJETS|${JETS}|g" hadronizer.py
+cp configLHE_jetmatching.cmnd hadronizer.cmnd
+
+sed -i "s|RUNEVENTS|${nEventsIn}|g" hadronizer.cmnd
+sed -i "s|SETQCUT|${QCUT}|g" hadronizer.cmnd
+sed -i "s|SETMAXJETS|${JETS}|g" hadronizer.cmnd
 
 setupTime=`date +%s`
 
-echo "running Pythia: cmsRun hadronizer.py > pythia.log 2>&1"
-cmsRun hadronizer.py > pythia.log 2>&1
-
-#new pythia xsec for CMSSW running
-Pythiaxsec=` cat pythia.log  | grep "After matching: total cross section"`
-
-pythiaTime=`date +%s`
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#run Pythia output through Delphes
-
-./DelphesCMSFWLite cards/CMS_PhaseII/$detCard $DelphesOutput file_out.root
+./DelphesPythia8 cards/CMS_PhaseII/$detCard hadronizer.cmnd $DelphesOutput
 if [ $? -ne 0 ]; then
     exit 16
 fi
+
+rm ${lhefile}
 
 DelphesTime=`date +%s`
 
@@ -126,24 +118,17 @@ echo "Input LHE: " $FILENAME >> $metaData
 echo "Input Events: " $nEventsIn >> $metaData
 echo >> $metaData
 
-echo "Pythia " $Pythiaxsec >> $metaData
-
 echo "Delphes Output: " $DelphesOutput >> $metaData
 echo "Delphes Version: " $DelphesVersion >> $metaData
 echo "Detector Card: " $detCard >> $metaData
 echo >> $metaData
 
 echo "Minutes spent setting up job: " `expr $setupTime / 60 - $startTime / 60` >> $metaData
-echo "Minutes spent running Pythia: " `expr $pythiaTime / 60 - $setupTime / 60` >> $metaData
-echo "Minutes spent running Delphes: " `expr $DelphesTime / 60 - $pythiaTime / 60` >> $metaData
+echo "Minutes spent running Delphes: " `expr $DelphesTime / 60 - $startTime / 60` >> $metaData
 echo >> $metaData
 
 echo "Pythia Card:" >> $metaData
-cat hadronizer.py >> $metaData
-echo >> $metaData
-
-echo "Pythia Output:" >> $metaData
-cat pythia.log >> $metaData
+cat hadronizer.cmnd >> $metaData
 echo >> $metaData
 
 echo "Delphes Card:" >> $metaData
@@ -175,4 +160,4 @@ echo "Total runtime (m): " `expr $endTime / 60 - $startTime / 60`
 echo "removing inputs from condor"
 rm -f ${DelphesOutput}
 rm -f ${metaData}
-rm -f ../Delphes333pre16.tar *.lhe *.gz hadronizer.py MinBias_100k.pileup
+rm -f ../Delphes342pre05.tar *.lhe *.gz hadronizer.cmnd MinBias_100k.pileup
