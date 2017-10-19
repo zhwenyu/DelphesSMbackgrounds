@@ -42,12 +42,15 @@ copy_fail = 0
 for folder in folders:
 
         #to exclude one or more processes:
-        #if 'LL-4p-0-100' not in folder: continue
+        #if 'BBB-4p-0-600' not in folder and 'vbf-4p-2300' not in folder: continue
 
-        if pileup == '200PU' and '_0PU' in folder: 
+        if pileup == '200PU' and '_200PU' not in folder: 
             print 'skipping',folder,', pileup was',pileup
             continue
-        if pileup == '0PU' and '_200PU' in folder: 
+        if pileup == '140PU' and '_140PU' not in folder: 
+            print 'skipping',folder,', pileup was', pileup
+            continue
+        if pileup == '0PU' and '_0PU' not in folder: 
             print 'skipping',folder,', pileup was', pileup
             continue
 
@@ -87,7 +90,7 @@ for folder in folders:
                     if '_'+index+'_' in rootfile: thisroot = rootfile
 	
                 if thisroot != '':
-                    zerosize = EOSisZeroSizefile(rootdir+folder+'/'+thisroot,'Aug')
+                    zerosize = EOSisZeroSizefile(rootdir+folder+'/'+thisroot,'Sep')
                     if zerosize:
                         if verbose_level > 0:
                             print '\tZERO SIZE:',file,' and JobIndex:',index

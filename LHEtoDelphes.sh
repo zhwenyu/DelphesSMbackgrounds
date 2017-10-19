@@ -26,7 +26,7 @@ runEvents=-1
 skipEvents=0
 detCard=CMS_PhaseII_${PILEUP}_v02.tcl
 energy=14
-DelphesVersion=tags/3.4.2pre05
+DelphesVersion=tags/3.4.2pre07
 nPU=`echo $detCard | cut -d '_' -f 2`
 process=`echo $FILENAME | cut -d '_' -f 1-2`
 phase=`echo $detCard | cut -d '_' -f 1`
@@ -41,14 +41,14 @@ eval `scram runtime -sh`
 cd -
 
 echo "xrdcp source tarball and pileup file"
-xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes342pre05.tar . #CHECK ME!
+xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes342pre07.tar . #CHECK ME!
 XRDEXIT=$?
 if [[ $XRDEXIT -ne 0 ]]; then
     echo "exit code $XRDEXIT, failure in xrdcp of Delphes.tar"
     exit $XRDEXIT
 fi
 
-tar -xf Delphes342pre05.tar
+tar -xf Delphes342pre07.tar
 cd delphes
 #./configure
 #make -j 4
@@ -160,4 +160,4 @@ echo "Total runtime (m): " `expr $endTime / 60 - $startTime / 60`
 echo "removing inputs from condor"
 rm -f ${DelphesOutput}
 rm -f ${metaData}
-rm -f ../Delphes342pre05.tar *.lhe *.gz hadronizer.cmnd MinBias_100k.pileup
+rm -f ../Delphes342pre07.tar *.lhe *.gz hadronizer.cmnd MinBias_100k.pileup

@@ -8,8 +8,8 @@ start_time = time.time()
 
 #IO directories must be full paths
 pileup = str(sys.argv[1])
-outputDir='/eos/uscms/store/user/snowmass/noreplica/Delphes342pre05test/' # CHANGE ME
-condorDir='/uscms_data/d3/jmanagan/Delphes342pre05test_logs/' # Change username, match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
+outputDir='/eos/uscms/store/user/snowmass/noreplica/Delphes342pre07test/' # CHANGE ME
+condorDir='/uscms_data/d3/jmanagan/Delphes342pre07test_logs/' # Change username, match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
 
 cTime=datetime.datetime.now()
 
