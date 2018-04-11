@@ -125,7 +125,7 @@ Output = %(FILENAME)s.out
 Error = %(FILENAME)s.err
 Log = %(FILENAME)s.log
 Notification = Never
-Arguments = %(INPUTDIR)s/%(RELPATH)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILENAME)s.lhe.gz %(QCUT)s %(JETS)s %(PILEUP)s
+Arguments = %(INPUTDIR)s/%(RELPATH)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILENAME)s.lhe %(QCUT)s %(JETS)s %(PILEUP)s
 
 Queue 1"""%dict)
         jdf.close()
