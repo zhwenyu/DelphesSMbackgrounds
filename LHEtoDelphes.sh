@@ -24,9 +24,9 @@ echo "System release " `cat /etc/redhat-release`
 # Set variables
 runEvents=-1
 skipEvents=0
-detCard=CMS_PhaseII_${PILEUP}_v02.tcl
+detCard=CMS_PhaseII_${PILEUP}_v03.tcl
 energy=14
-DelphesVersion=tags/3.4.2pre07
+DelphesVersion=tags/3.4.2pre12
 nPU=`echo $detCard | cut -d '_' -f 2`
 process=`echo $FILENAME | cut -d '_' -f 1-2`
 phase=`echo $detCard | cut -d '_' -f 1`
@@ -41,14 +41,15 @@ eval `scram runtime -sh`
 cd -
 
 echo "xrdcp source tarball and pileup file"
-xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes342pre07.tar . #CHECK ME!
+xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes342pre12.tar . #CHECK ME!
 XRDEXIT=$?
 if [[ $XRDEXIT -ne 0 ]]; then
     echo "exit code $XRDEXIT, failure in xrdcp of Delphes.tar"
     exit $XRDEXIT
 fi
 
-tar -xf Delphes342pre07.tar
+tar -xf Delphes342pre12.tar
+rm Delphes342pre12.tar
 cd delphes
 #./configure
 #make -j 4
@@ -76,7 +77,8 @@ echo "Swapping weight index in LHE file ${FILENAME}, unzipping to ${lhefile}"
 noweightstring="2212     2212  0.70000000000E+04  0.70000000000E+04 0 0 10042 10042 3  3"
 weightstring="2212     2212  0.70000000000E+04  0.70000000000E+04 0 0 10042 10042 4  3"
 
-gunzip -c ${FILENAME} > ${lhefile}
+#gunzip -c ${FILENAME} > ${lhefile}
+cp ${FILENAME} ${lhefile}
 sed -i "s/$noweightstring/$weightstring/" ${lhefile}
 nEventsIn=`grep -c '<event>' ${lhefile}`
 echo "=================== There are $nEventsIn events for $lhefile ============================="
@@ -160,4 +162,4 @@ echo "Total runtime (m): " `expr $endTime / 60 - $startTime / 60`
 echo "removing inputs from condor"
 rm -f ${DelphesOutput}
 rm -f ${metaData}
-rm -f ../Delphes342pre07.tar *.lhe *.gz hadronizer.cmnd MinBias_100k.pileup
+rm -f ../*.tar *.lhe *.gz hadronizer.cmnd MinBias_100k.pileup
