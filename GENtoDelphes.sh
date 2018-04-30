@@ -23,7 +23,7 @@ echo "System release " `cat /etc/redhat-release`
 # Set variables
 runEvents=-1
 skipEvents=0
-detCard=CMS_PhaseII_${PILEUP}_v02.tcl
+detCard=CMS_PhaseII_${PILEUP}_v03.tcl
 energy=14
 DelphesVersion=tags/3.4.2pre07
 nPU=`echo $detCard | cut -d '_' -f 2 | cut -d '.' -f 1`
