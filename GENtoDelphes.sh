@@ -38,14 +38,14 @@ eval `scram runtime -sh`
 cd -
 
 echo "xrdcp source tarball and pileup file"
-xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes342pre07.tar . #CHECK ME!
+xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes342pre13.tar . #CHECK ME!
 XRDEXIT=$?
 if [[ $XRDEXIT -ne 0 ]]; then
     echo "exit code $XRDEXIT, failure in xrdcp of Delphes.tar"
     exit $XRDEXIT
 fi
 
-tar -xf Delphes342pre07.tar
+tar -xf Delphes342pre13.tar
 cd delphes
 #./configure
 #make -j 4
@@ -121,4 +121,4 @@ echo "Total runtime (m): " `expr $endTime / 60 - $startTime / 60`
 
 echo "removing inputs from condor"
 rm -f ${FILEOUT}
-rm -f ../Delphes342pre07.tar *.root MinBias_100k.pileup
+rm -f ../Delphes342pre13.tar *.root MinBias_100k.pileup
