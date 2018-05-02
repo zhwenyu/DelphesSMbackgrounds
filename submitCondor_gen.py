@@ -8,12 +8,13 @@ start_time = time.time()
 
 #IO directories must be full paths
 pileup = str(sys.argv[1])
-outputDir='/eos/uscms/store/user/snowmass/noreplica/YR_Delphes/Delphes342pre13/' # CHANGE ME
+outputDir='/store/user/snowmass/noreplica/YR_Delphes/Delphes342pre13/' # CHANGE ME
+## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre13/'  ## For CERN condor
 condorDir='/uscms_data/d3/jmanagan/YR_Delphes/Delphes342pre13_logs/' # Change username, helps to match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
 
 cTime=datetime.datetime.now()
 
-outDir=outputDir[10:]
+#outDir=outputDir[10:]
 
 print 'Getting proxy'
 proxyPath=os.popen('voms-proxy-info -path')
@@ -36,7 +37,7 @@ for sample in fileList:
     rootlist = open('fileLists/'+sample)
     rootfiles = []
     for line in rootlist:
-        rootfiles.append('root://cmsxrootd.fnal.gov/'+line.strip())
+        rootfiles.append('root://cmsxrootd.fnal.gov/'+line.strip())  ## Can change to whatever is normal for running @ CERN
         # OPTIONAL: use a more exact accessor for certain samples at CERN:
         #if(sample != 'WprimeToWZToWhadZinv_narrow_M-600_13TeV-madgraph.txt'): rootfiles.append('root://eoscms.cern.ch/'+line.strip())
         #else: rootfiles.append('root://cmsxrootd.fnal.gov/'+line.strip())
@@ -45,7 +46,8 @@ for sample in fileList:
     relPath = sample.replace('.txt','')
     #print 'relPath =',relPath
 
-    os.system('eos root://cmseos.fnal.gov/ mkdir -p '+outDir+relPath+'_'+pileup)
+    os.system('eos root://cmseos.fnal.gov/ mkdir -p '+outputDir+relPath+'_'+pileup)
+    ## os.system('eos root://eoscms.cern.ch/ mkdir -p '+outputDir+relPath+'_'+pileup) # For running @ CERN
     os.system('mkdir -p '+condorDir+relPath+'_'+pileup)
     
     tempcount = 0;
@@ -58,7 +60,7 @@ for sample in fileList:
 
         outfile = relPath+'_'+str(tempcount)
 
-        dict={'RUNDIR':runDir, 'RELPATH':relPath, 'PILEUP':pileup, 'FILEIN':infile, 'FILEOUT':outfile, 'PROXY':proxyPath, 'OUTPUTDIR':outDir}
+        dict={'RUNDIR':runDir, 'RELPATH':relPath, 'PILEUP':pileup, 'FILEIN':infile, 'FILEOUT':outfile, 'PROXY':proxyPath, 'OUTPUTDIR':outputDir}
         jdfName=condorDir+'/%(RELPATH)s_%(PILEUP)s/%(FILEOUT)s.jdl'%dict
         print jdfName
         jdf=open(jdfName,'w')
