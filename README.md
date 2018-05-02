@@ -6,7 +6,8 @@ To create a new Delphes area: https://twiki.cern.ch/twiki/bin/view/CMS/DelphesUP
 If running on LHE: compile DelphesPythia8 and copy configLHE_jetmatchning.cmnd into the delphes directory before creating a tarball.
 
 LHE-input scripts: submitCondor.py, LHEtoDelphes.sh
-GEN-input scripts: submitCondor_gen.py GENtoDelphes.sh
+
+GEN-input scripts: submitCondor_gen.py, GENtoDelphes.sh
 
 CHECK ALL YOUR SCRIPTS BEFORE RUNNING, MAKE NO ASSUMPTIONS!
 
@@ -15,9 +16,9 @@ CHECK ALL YOUR SCRIPTS BEFORE RUNNING, MAKE NO ASSUMPTIONS!
 To SUBMIT condor jobs at the LPC:
 
 voms-proxy-init -voms cms
-python -u submitCondor.py <0,200>PU >& submit.log &
+python -u submitCondor_gen.py <0,200>PU >& submit.log &
 
-In this file, set output directories and choose samples
+*In this file, set output directories and choose samples*
 
 ---------------------------------------------------------
 
@@ -27,17 +28,21 @@ Check CMSSW releases and locations of tarball and minBias file, they are not arg
 Can control card, number of events, etc, from here.
 This script does xrdcp from EOS, runs Pythia, and runs Delphes. 
 
-NOTE: check which minBias file your delphes card is set to use!! Re-tar after any card edits.
+*NOTE: check which minBias file your delphes card is set to use!! Re-tar after any card edits.*
 
 ---------------------------------------------------------
 
-To check output of jobs, edit CheckErrorsDelphes.py (check ROOT file directory path & month for zero size test)
+To check output of jobs, edit CheckErrorsDelphesGEN.py (check ROOT file directory path & month for zero size test)
 
-python -u CheckErrorsDelphes.py /path/to/logs/ --pileup <0,200>PU --verbose <0,1> --resubmit <0,1> --resub_num <-1,0,1,2>
+python -u CheckErrorsDelphes.py /path/to/logs/ --pileup <0,200>PU --verbose <0,1> --resubmit <0,1> --resub_num <-1,0,1,2,3>
 
-This will check for three types of failures (give as resub_num argument)
+*Note: the final slash on the log file directory path is important*
+
+This will check for four types of failures (give as resub_num argument)
 
 0. Explicit failure of xrdcp, printed in the log file
+
+1. Job went over the 2-day walltime limit on the LPC cluster
 
 1. ROOT file in EOS with zero size. NOTE: have to hardcode the month expected in ls -l
 
@@ -50,6 +55,8 @@ Logs can be deleted after jobs are successful.
 --------------------------------------------------------
 
 Post-processing scripts are available to hadd and xrdcp files
+
+*CAUTION, as of May 2018 there is trouble copying to CERN, check with Julie for updates*
 
 python -u haddOnCondor.py <0,200>PU
 
