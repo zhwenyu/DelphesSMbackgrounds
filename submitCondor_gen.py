@@ -8,8 +8,8 @@ start_time = time.time()
 
 #IO directories must be full paths
 pileup = str(sys.argv[1])
-outputDir='/eos/uscms/store/user/snowmass/noreplica/Delphes342pre07test/' # CHANGE ME
-condorDir='/uscms_data/d3/jmanagan/Delphes342pre07test_logs/' # Change username, match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
+outputDir='/eos/uscms/store/user/snowmass/noreplica/YR_Delphes/Delphes342pre13/' # CHANGE ME
+condorDir='/uscms_data/d3/jmanagan/YR_Delphes/Delphes342pre13_logs/' # Change username, helps to match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
 
 cTime=datetime.datetime.now()
 
@@ -23,7 +23,12 @@ print 'Starting submission'
 count=0
 
 fileList = [  # CHOOSE SAMPLES, you MUST have listed the file names with listFiles.py
-    'VBF_HToZZTo4L_M125_14TeV_powheg2_JHUgenV702_pythia8.txt',
+    'DMScalar_top_tChan_Mchi1_Mphi100_14TeV_madgraph.txt',                                                  
+    'DMScalar_top_tChan_Mchi1_Mphi10_14TeV_madgraph.txt',
+    'DMScalar_top_tChan_Mchi1_Mphi500_14TeV_madgraph.txt',                                                  
+    'DMScalar_top_tWChan_Mchi1_Mphi100_14TeV_madgraph.txt',                                                 
+    'DMScalar_top_tWChan_Mchi1_Mphi10_14TeV_madgraph.txt',                                                  
+    'DMScalar_top_tWChan_Mchi1_Mphi500_14TeV_madgraph.txt',
     ]
 
 for sample in fileList:
