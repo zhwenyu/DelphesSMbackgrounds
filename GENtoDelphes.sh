@@ -106,8 +106,11 @@ echo
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # copy output to eos
+# Running @CERN this should be fine with the root://eoscms.cern.ch eosOutDir
+# Running @DESY likely need to change this copy command!
 echo "xrdcp -f ${DelphesOutput} ${eosOutDir}/${DelphesOutput}"
 xrdcp -f ${FILEOUT} root://cmseos.fnal.gov/${OUTPUT}/${FILEOUT} 2>&1
+#gfal-cp ${FILEOUT} srm://dcache-se-cms.desy.de/pnfs/desy.de/cms/tier2/${OUTPUT}/${FILEOUT} 2>&1 ## Maybe??
 XRDEXIT=$?
 if [[ $XRDEXIT -ne 0 ]]; then
     echo "exit code $XRDEXIT, failure in xrdcp of ROOT"
