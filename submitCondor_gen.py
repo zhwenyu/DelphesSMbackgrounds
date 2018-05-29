@@ -8,10 +8,10 @@ start_time = time.time()
 
 #IO directories must be full paths
 pileup = str(sys.argv[1])
-outputDir='/store/user/snowmass/noreplica/YR_Delphes/Delphes342pre13/' # CHANGE ME
-## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre13/'  ## For CERN condor
-## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre13/' ## For DESY (gfal prefix??? See line 52)
-condorDir='/uscms_data/d3/jmanagan/YR_Delphes/Delphes342pre13_logs/' # Change username, helps to match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
+outputDir='/store/user/snowmass/noreplica/YR_Delphes/Delphes342pre14/' # CHANGE ME
+## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre14/'  ## For CERN condor
+## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre14/' ## For DESY (gfal prefix??? See line 52)
+condorDir='/uscms_data/d3/jmanagan/YR_Delphes/Delphes342pre14_logs/' # Change username, helps to match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
 
 cTime=datetime.datetime.now()
 
@@ -25,11 +25,11 @@ print 'Starting submission'
 count=0
 
 fileList = [  # CHOOSE SAMPLES, you MUST have listed the file names with listFiles.py
-    'DMScalar_top_tChan_Mchi1_Mphi100_14TeV_madgraph.txt',                                                  
+    'DMScalar_top_tChan_Mchi1_Mphi100_14TeV_madgraph.txt', 
     'DMScalar_top_tChan_Mchi1_Mphi10_14TeV_madgraph.txt',
-    'DMScalar_top_tChan_Mchi1_Mphi500_14TeV_madgraph.txt',                                                  
-    'DMScalar_top_tWChan_Mchi1_Mphi100_14TeV_madgraph.txt',                                                 
-    'DMScalar_top_tWChan_Mchi1_Mphi10_14TeV_madgraph.txt',                                                  
+    'DMScalar_top_tChan_Mchi1_Mphi500_14TeV_madgraph.txt', 
+    'DMScalar_top_tWChan_Mchi1_Mphi100_14TeV_madgraph.txt',
+    'DMScalar_top_tWChan_Mchi1_Mphi10_14TeV_madgraph.txt', 
     'DMScalar_top_tWChan_Mchi1_Mphi500_14TeV_madgraph.txt',
     ]
 
