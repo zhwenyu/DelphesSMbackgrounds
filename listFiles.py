@@ -422,10 +422,10 @@ samplelist = [
     '/TTbarDMJets_DiLept_scalar_NLO_Mchi-1_Mphi-50_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN',
 
     ]
+   
+if not os.path.exists(os.getcwd()+'/fileLists'): os.system('mkdir fileLists')
     
-    if not os.path.exists(os.getcwd()+'/fileLists'): os.system('mkdir fileLists')
-    
-    for sample in samplelist:
+for sample in samplelist:
     print '------------------------------------------'
     print 'Listing',sample
 
