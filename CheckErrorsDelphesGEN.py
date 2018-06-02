@@ -11,7 +11,7 @@
 ###    --resub_num 2 (root file with size zero), --resub_num 3 (no root file)
 
 
-import os, sys, getopt
+import os, sys, getopt,subprocess
 execfile("/uscms_data/d3/jmanagan/EOSSafeUtils.py")
 dir = sys.argv[1]
 
@@ -56,7 +56,7 @@ time_fail = 0
 for folder in folders:
 
     #to exclude one or more processes:
-    #if 'BBB-4p-0-600' not in folder and 'vbf-4p-2300' not in folder: continue
+    #if 'ST_' not in folder and 'InclusiveDecays' not in folder: continue
 
     if pileup == '200PU' and '_200PU' not in folder: 
         print 'skipping',folder,', pileup was',pileup
@@ -78,6 +78,7 @@ for folder in folders:
     os.listdir(dir+'/'+folder)
 	
     resub_index = []
+    resub_index_walltime = []
     count_total = 0
     for file in files:
         total_total+=1
@@ -119,7 +120,7 @@ for folder in folders:
             if '_'+index+'.root' in rootfile: thisroot = rootfile
 	
         if thisroot != '':
-            zerosize = EOSisZeroSizefile(rootdir+folder+'/'+thisroot,'May')
+            zerosize = EOSisZeroSizefile(rootdir+folder+'/'+thisroot,'Jun')
             if zerosize:
                 if verbose_level > 0:
                     print '\tZERO SIZE:',file,' and JobIndex:',index
@@ -137,15 +138,68 @@ for folder in folders:
     if resub_index != []: print 'RESUBS:', resub_index
     if resubmit != '1': continue
 
-    indexind = 0
     savedir = os.getcwd()
     for index in resub_index:
-        os.chdir(dir+'/'+folder)
-        os.system('rm '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+ '_'+index+'.out')
-        os.system('rm '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+ '_'+index+'.log')
-        os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl')
-        indexind+=1
-        os.chdir(savedir)
+
+        doSplitting = True
+        if os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl') and os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl'):
+            doSplitting = False
+
+        if not doSplitting:
+            print 'Not splitting '+folder.replace('_'+pileup,'')+ '_'+index+'.jdl'
+            os.chdir(dir+'/'+folder)
+            os.system('rm '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+ '_'+index+'.out')
+            os.system('rm '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+ '_'+index+'.log')
+            os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl')
+            os.chdir(savedir)
+
+        else:
+            print 'Splitting '+folder.replace('_'+pileup,'')+ '_'+index+'.jdl into '+index+'.jdl and '+index+'b.jdl'
+            command = "grep 'Arguments' "+dir+"/"+folder+"/"+folder.replace("_"+pileup,"")+"_"+index+".jdl"
+            proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+            (args, err) = proc.communicate()
+            filename = (args.split(' ')[2])
+            filename = filename[filename.find('/store'):]
+
+            if len(args.split(' ')) > 6: args = args.replace(args.split(' ')[6]+' '+args.split(' ')[7],'')
+            
+            command = '/cvmfs/cms.cern.ch/common/dasgoclient --query="file='+filename+' | grep file.nevents" '
+            proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+            (out, err) = proc.communicate()
+            try: nevents = int(out.split('\n')[0])
+            except:
+                try: nevents = int(out.split('\n')[1])
+                except: print 'ERROR: couldnt isolate the number of events'
+
+            half1 = int(round(nevents/2))
+            half2 = int(nevents-round(nevents/2))
+            newargs1 = args.strip()+' 0 '+str(half1)
+            newargs2 = args.strip()+' '+str(half1)+' '+str(half2)
+
+            f = open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl','rU')
+            jdllines = f.readlines()
+            f.close()
+
+            name = folder.replace('_'+pileup,'')+'_'+index
+            newname = folder.replace('_'+pileup,'')+'_'+index+'b'
+
+            with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl','w') as fout:
+                for line in jdllines:
+                    if 'Argument' in line: line = line.replace(args.strip(),newargs1)
+                    fout.write(line)
+
+            with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl','w') as fout:
+                for line in jdllines:
+                    if 'Argument' in line: line = line.replace(args.strip(),newargs2)
+                    if name in line: line = line.replace(name,newname)
+                    fout.write(line)
+
+            os.chdir(dir+'/'+folder)
+            os.system('rm '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+ '_'+index+'.log')
+            os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl')
+            os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl')
+            os.chdir(savedir)
+
 	
 print
 print 'TOTAL JOBS: ', total_total

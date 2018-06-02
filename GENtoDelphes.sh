@@ -15,15 +15,22 @@ FILEIN=$1
 OUTPUT=$2
 FILEOUT=$3
 PILEUP=$4
+SKIPEVT=$5
+MAXEVT=$6
 
 echo "Starting job on " `date`
 echo "Running on " `uname -a`
 echo "System release " `cat /etc/redhat-release`
 
+if [[ $# -eq 4 ]] ; then
+    echo "Setting SkipEvents to 0, no argument given"
+    SKIPEVT=0
+    echo "Setting MaxEvents to -1, no argument given"
+    MAXEVT=-1
+fi
+
 # Set variables
-runEvents=-1
-skipEvents=0
-detCard=CMS_PhaseII_${PILEUP}_v03.tcl
+detCard=CMS_PhaseII_${PILEUP}_v03_splitter.tcl
 energy=14
 DelphesVersion=tags/3.4.2pre14
 nPU=`echo $detCard | cut -d '_' -f 2 | cut -d '.' -f 1`
@@ -62,7 +69,7 @@ echo "xrdcp input miniAOD"
 xrdcp -f ${FILEIN} delphesinput.root
 XRDEXIT=$?
 if [[ $XRDEXIT -ne 0 ]]; then
-    echo "exit code $XRDEXIT, failure in xrdcp of LHE file"
+    echo "exit code $XRDEXIT, failure in xrdcp of GEN file"
     exit $XRDEXIT
 fi
 
@@ -70,6 +77,9 @@ setupTime=`date +%s`
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #run MiniAOD through Delphes
+
+sed -i "s|MAXEVENTS|${MAXEVT}|g" cards/CMS_PhaseII/$detCard
+sed -i "s|SKIPEVENTS|${SKIPEVT}|g" cards/CMS_PhaseII/$detCard
 
 ./DelphesCMSFWLite cards/CMS_PhaseII/$detCard ${FILEOUT} delphesinput.root
 if [ $? -ne 0 ]; then
@@ -91,8 +101,9 @@ echo "Configuration: " $configuration
 echo "Energy: " $energy 
 echo 
 
-echo "Input MiniAOD: " $FILEIN 
-echo "Input Events: " $nEventsIn 
+echo "Input MiniAOD: " $FILEIN
+echo "Skipped Events: " $SKIPEVT 
+echo "Run Events: " $MAXEVT 
 echo 
 
 echo "Delphes Output: " $FILEOUT
