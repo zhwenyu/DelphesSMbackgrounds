@@ -142,8 +142,10 @@ for folder in folders:
     for index in resub_index:
 
         doSplitting = True
-        if os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl') and os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl'):
-            doSplitting = False
+        if 'b' in index: doSplitting = False
+        else:
+            if os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl') and os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl'):
+                doSplitting = False
 
         if not doSplitting:
             print 'Not splitting '+folder.replace('_'+pileup,'')+ '_'+index+'.jdl'
