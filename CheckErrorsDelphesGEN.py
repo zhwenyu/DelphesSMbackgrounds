@@ -56,7 +56,7 @@ time_fail = 0
 for folder in folders:
 
     #to exclude one or more processes:
-    #if 'ST_' not in folder and 'InclusiveDecays' not in folder: continue
+    #if 'ST_s-channel_4f_leptonic' not in folder: continue
 
     if pileup == '200PU' and '_200PU' not in folder: 
         print 'skipping',folder,', pileup was',pileup
@@ -84,6 +84,7 @@ for folder in folders:
         total_total+=1
         index = file[file.find('_')+1:file.find('.')]
         if '_' in index: index = index.split('_')[-1]
+        #if '_' in index: index = index.split('_')[-2]+'_'+index.split('_')[-1]
         count_total += 1
 
         try:
@@ -142,10 +143,14 @@ for folder in folders:
     for index in resub_index:
 
         doSplitting = True
-        if 'b' in index: doSplitting = False
+        alreadySplit = False
+        if 'b' in index: 
+            #doSplitting = False
+            alreadySplit = True
         else:
             if os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl') and os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl'):
-                doSplitting = False
+                #doSplitting = False
+                alreadySplit = True
 
         if not doSplitting:
             print 'Not splitting '+folder.replace('_'+pileup,'')+ '_'+index+'.jdl'
@@ -156,52 +161,99 @@ for folder in folders:
             os.chdir(savedir)
 
         else:
-            print 'Splitting '+folder.replace('_'+pileup,'')+ '_'+index+'.jdl into '+index+'.jdl and '+index+'b.jdl'
-            command = "grep 'Arguments' "+dir+"/"+folder+"/"+folder.replace("_"+pileup,"")+"_"+index+".jdl"
-            proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-            (args, err) = proc.communicate()
-            filename = (args.split(' ')[2])
-            filename = filename[filename.find('/store'):]
+            if not alreadySplit:
+                print 'Not split: Splitting '+index+'.jdl into '+index+'.jdl and '+index+'b.jdl'
+                command = "grep 'Arguments' "+dir+"/"+folder+"/"+folder.replace("_"+pileup,"")+"_"+index+".jdl"
+                proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+                (args, err) = proc.communicate()
+                filename = (args.split(' ')[2])
+                filename = filename[filename.find('/store'):]
+                
+                if len(args.split(' ')) > 6: args = args.replace(args.split(' ')[6]+' '+args.split(' ')[7],'')
+                
+                command = '/cvmfs/cms.cern.ch/common/dasgoclient --query="file='+filename+' | grep file.nevents" '
+                proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+                (out, err) = proc.communicate()
+                try: nevents = int(out.split('\n')[0])
+                except:
+                    try: nevents = int(out.split('\n')[1])
+                    except: print 'ERROR: couldnt isolate the number of events'
+                
+                half1 = int(round(nevents/2))
+                half2 = int(nevents-round(nevents/2))
+                newargs1 = args.strip()+' 0 '+str(half1)
+                newargs2 = args.strip()+' '+str(half1)+' '+str(half2)
+                
+                #print newargs1
+                #print newargs2
 
-            if len(args.split(' ')) > 6: args = args.replace(args.split(' ')[6]+' '+args.split(' ')[7],'')
-            
-            command = '/cvmfs/cms.cern.ch/common/dasgoclient --query="file='+filename+' | grep file.nevents" '
-            proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-            (out, err) = proc.communicate()
-            try: nevents = int(out.split('\n')[0])
-            except:
-                try: nevents = int(out.split('\n')[1])
-                except: print 'ERROR: couldnt isolate the number of events'
+                f = open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl','rU')
+                jdllines = f.readlines()
+                f.close()
+                
+                name = folder.replace('_'+pileup,'')+'_'+index
+                newname = folder.replace('_'+pileup,'')+'_'+index+'b'
+                
+                with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl','w') as fout:
+                    for line in jdllines:
+                        if 'Argument' in line: line = line.replace(args.strip(),newargs1)
+                        fout.write(line)
+                
+                with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl','w') as fout:
+                    for line in jdllines:
+                        if 'Argument' in line: line = line.replace(args.strip(),newargs2)
+                        if name in line: line = line.replace(name,newname)
+                        fout.write(line)
+                
+                os.chdir(dir+'/'+folder)
+                os.system('rm '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+ '_'+index+'.log')
+                os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl')
+                os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl')
+                os.chdir(savedir)
 
-            half1 = int(round(nevents/2))
-            half2 = int(nevents-round(nevents/2))
-            newargs1 = args.strip()+' 0 '+str(half1)
-            newargs2 = args.strip()+' '+str(half1)+' '+str(half2)
+            else:
+                print 'Is split: splitting '+index+'.jdl into '+index+'.jdl and '+index+'c.jdl'
+                command = "grep 'Arguments' "+dir+"/"+folder+"/"+folder.replace("_"+pileup,"")+"_"+index+".jdl"
+                proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+                (args, err) = proc.communicate()
+                print args
+                try:
+                    origskip = int(args.split(' ')[6].strip())
+                    origmax = int(args.split(' ')[7].strip())
+                except:
+                    print 'FIX ME'
+                    continue
 
-            f = open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl','rU')
-            jdllines = f.readlines()
-            f.close()
+                newmax = origmax/2
+                newskip = origskip+newmax
 
-            name = folder.replace('_'+pileup,'')+'_'+index
-            newname = folder.replace('_'+pileup,'')+'_'+index+'b'
+                #print args.replace(' '+str(origskip)+' '+str(origmax),' '+str(origskip)+' '+str(newmax))
+                #print args.replace(' '+str(origskip)+' '+str(origmax),' '+str(newskip)+' '+str(newmax))
 
-            with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl','w') as fout:
-                for line in jdllines:
-                    if 'Argument' in line: line = line.replace(args.strip(),newargs1)
-                    fout.write(line)
+                f = open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl','rU')
+                jdllines = f.readlines()
+                f.close()
+                
+                name = folder.replace('_'+pileup,'')+'_'+index
+                newname = folder.replace('_'+pileup,'')+'_'+index+'c'
+                
+                with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl','w') as fout:
+                    for line in jdllines:
+                        if 'Argument' in line: line = line.replace(' '+str(origskip)+' '+str(origmax),' '+str(origskip)+' '+str(newmax))
+                        fout.write(line)
+                
+                with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'c.jdl','w') as fout:
+                    for line in jdllines:
+                        if 'Argument' in line: line = line.replace(' '+str(origskip)+' '+str(origmax),' '+str(newskip)+' '+str(newmax))
+                        if name in line: line = line.replace(name,newname)
+                        fout.write(line)
 
-            with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl','w') as fout:
-                for line in jdllines:
-                    if 'Argument' in line: line = line.replace(args.strip(),newargs2)
-                    if name in line: line = line.replace(name,newname)
-                    fout.write(line)
-
-            os.chdir(dir+'/'+folder)
-            os.system('rm '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+ '_'+index+'.log')
-            os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl')
-            os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl')
-            os.chdir(savedir)
-
+                os.chdir(dir+'/'+folder)
+                os.system('rm '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+ '_'+index+'.log')
+                os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl')
+                os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'c.jdl')
+                os.chdir(savedir)
+                
 	
 print
 print 'TOTAL JOBS: ', total_total
