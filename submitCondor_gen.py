@@ -10,7 +10,7 @@ start_time = time.time()
 
 #IO directories must be full paths
 pileup = str(sys.argv[1])
-outputDir='/store/user/snowmass/noreplica/YR_Delphes_prod-luca-split/Delphes342pre14_split/' # CHANGE ME
+outputDir='/store/user/snowmass/noreplica/YR_Delphes/Delphes342pre14_split/' # CHANGE ME
 ## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre14/'  ## For CERN condor
 ## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre14/' ## For DESY (gfal prefix??? See line 52)
 condorDir='/uscms/home/lcadamur/nobackup/Delphes342pre14_split_logs/' # Change username, helps to match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
@@ -30,58 +30,10 @@ print 'Starting submission'
 count=0
 
 fileList = [  # CHOOSE SAMPLES, you MUST have listed the file names with listFiles.py
-    'GluGluToHHTo2B2G_node_2_14TeV-madgraph.txt',
-    'GluGluToHHTo2B2G_node_SM_14TeV-madgraph.txt',
-    'GluGluToHHTo2B2Tau_node_2_14TeV-madgraph.txt',
-    'GluGluToHHTo2B2VTo2L2Nu_node_2_14TeV-madgraph.txt',
-    'GluGluToHHTo2B2VTo2L2Nu_node_SM_14TeV-madgraph.txt',
-    'GluGluToHHTo4B_node_2_14TeV-madgraph.txt',
-    'GluGluToHHTo4B_node_SM_14TeV-madgraph.txt',
-    ######
-    # 'RSGluonToTTbar_M3000_TuneCUEP8M1_14TeV_pythia8.txt',
-    # 'RSGluonToTTbar_M4000_TuneCUEP8M1_14TeV_pythia8.txt',
-    # 'ST_FCNC-TA_Tleptonic_kappa_act-Madgraph5-pythia8.txt',
-    # 'ST_FCNC-TA_Tleptonic_kappa_aut-Madgraph5-pythia8.txt',
-    # 'ST_FCNC-TH_Thadronic_HToaa_eta_hct-MadGraph5-pythia8.txt',
-    # 'ST_FCNC-TH_Thadronic_HToaa_eta_hut-MadGraph5-pythia8.txt',
-    # 'ST_FCNC-TH_Tleptonic_HToWWZZtautau_eta_hct-MadGraph5-pythia8.txt',
-    # 'ST_FCNC-TH_Tleptonic_HToWWZZtautau_eta_hut-MadGraph5-pythia8.txt',
-    # 'ST_FCNC-TH_Tleptonic_HToaa_eta_hct-MadGraph5-pythia8.txt',
-    # 'ST_FCNC-TH_Tleptonic_HToaa_eta_hut-MadGraph5-pythia8.txt',
-    # 'ST_FCNC-TH_Tleptonic_HTobb_eta_hct-MadGraph5-pythia8.txt',
-    # 'ST_FCNC-TH_Tleptonic_HTobb_eta_hut-MadGraph5-pythia8.txt',
-    # 'ST_FCNC-T_Tleptonic_kappa_gct-MadGraph5-pythia8.txt',
-    # 'ST_FCNC-T_Tleptonic_kappa_gut-MadGraph5-pythia8.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M500.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M1000.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M1500.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M2000.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M2500.txt',
-    ###
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_s-channel-M500.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_s-channel-M1000.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_s-channel-M1500.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_s-channel-M2000.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_s-channel-M2500.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_t-channel-M500.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_t-channel-M1000.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_t-channel-M1500.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_t-channel-M2000.txt',
-    # 'SingleLQ3ToTauB_5f_madgraph_LO_t-channel-M2500.txt',
-    # 'TTbarDMJets_DiLept_pseudoscalar_NLO_Mchi-1_Mphi-10_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_pseudoscalar_NLO_Mchi-1_Mphi-20_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_pseudoscalar_NLO_Mchi-1_Mphi-50_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_pseudoscalar_NLO_Mchi-1_Mphi-100_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_pseudoscalar_NLO_Mchi-1_Mphi-200_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_pseudoscalar_NLO_Mchi-1_Mphi-300_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_pseudoscalar_NLO_Mchi-1_Mphi-500_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_scalar_NLO_Mchi-1_Mphi-10_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_scalar_NLO_Mchi-1_Mphi-20_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_scalar_NLO_Mchi-1_Mphi-50_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_scalar_NLO_Mchi-1_Mphi-100_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_scalar_NLO_Mchi-1_Mphi-200_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_scalar_NLO_Mchi-1_Mphi-300_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
-    # 'TTbarDMJets_DiLept_scalar_NLO_Mchi-1_Mphi-500_TuneCUETP8M1_14TeV-madgraph-pythia8.txt',
+    'RSGluonToTTbar_M3000_TuneCUEP8M1_14TeV_pythia8.txt',
+    'RSGluonToTTbar_M4000_TuneCUEP8M1_14TeV_pythia8.txt',
+    'ST_FCNC-TA_Tleptonic_kappa_act-Madgraph5-pythia8.txt',
+    'ST_FCNC-TA_Tleptonic_kappa_aut-Madgraph5-pythia8.txt',
     ]
 
 for sample in fileList:
@@ -158,6 +110,7 @@ Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(P
 Queue 1"""%dict)
             else:
                 outfile = relPath+'_'+str(tempcount)+'_'+str(i_split)
+                ## WARNING WARNING -- Do not expect the resubmitter to recognize these <int>_<int> indices correctly!!!
                 maxEvents = int(maxEvtsPerJob)
                 skipEvents = int(maxEvtsPerJob*i_split)
                 if i_split == n_jobs-1:
