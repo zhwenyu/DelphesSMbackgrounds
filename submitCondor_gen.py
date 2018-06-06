@@ -10,16 +10,14 @@ start_time = time.time()
 
 #IO directories must be full paths
 pileup = str(sys.argv[1])
-outputDir='/store/user/snowmass/noreplica/YR_Delphes/Delphes342pre14_split/' # CHANGE ME
+outputDir='/store/user/snowmass/noreplica/YR_Delphes/Delphes342pre15/'
 ## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre14/'  ## For CERN condor
 ## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre14/' ## For DESY (gfal prefix??? See line 52)
-condorDir='/uscms/home/lcadamur/nobackup/Delphes342pre14_split_logs/' # Change username, helps to match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
+condorDir='/uscms/home/lcadamur/nobackup/Delphes342pre15_logs/' # Change username, helps to match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
 
 cTime=datetime.datetime.now()
 
-#outDir=outputDir[10:]
-
-maxEvtsPerJob = 20000 ## -1 --> do not make splitting (1 job per file)
+maxEvtsPerJob = 50000 ## -1 --> do not make splitting (1 job per file)
 # maxEvtsPerJob = -1 ## -1 --> do not make splitting (1 job per file)
 
 print 'Getting proxy'
@@ -50,7 +48,6 @@ for sample in fileList:
     rootlist.close()
 
     relPath = sample.replace('.txt','')
-    #print 'relPath =',relPath
 
     os.system('eos root://cmseos.fnal.gov/ mkdir -p '+outputDir+relPath+'_'+pileup)
     ## os.system('eos root://eoscms.cern.ch/ mkdir -p '+outputDir+relPath+'_'+pileup) # For running @ CERN
@@ -62,9 +59,8 @@ for sample in fileList:
         infile = file
 
         tempcount+=1
+        # if tempcount > 1: continue   # OPTIONAL to submit a test job
 
-        # print file
-        # print rootfiles_bare[ifile]
         fname_bare = rootfiles_bare[ifile]
         n_jobs = 1
         if maxEvtsPerJob > -1: ## just query DAS if necessary
@@ -75,10 +71,7 @@ for sample in fileList:
             except:
                 try: nevents = int(out.split('\n')[1])
                 except: print 'ERROR: couldnt isolate the number of events'
-            # print fname_bare
-            # print "num files: ", nevents
-            # print ""
-            # if tempcount > 1: continue   # OPTIONAL to submit a test job
+
             n_jobs = int(nevents) / int(maxEvtsPerJob)
             if int(nevents) % int(maxEvtsPerJob) > 0:
                 n_jobs += 1 ## and extra one to account for the remainder
@@ -110,17 +103,13 @@ Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(P
 Queue 1"""%dict)
             else:
                 outfile = relPath+'_'+str(tempcount)+'_'+str(i_split)
-                ## WARNING WARNING -- Do not expect the resubmitter to recognize these <int>_<int> indices correctly!!!
                 maxEvents = int(maxEvtsPerJob)
                 skipEvents = int(maxEvtsPerJob*i_split)
                 if i_split == n_jobs-1:
                    maxEvents = nevents - maxEvtsPerJob*(n_jobs-1) ## up to the last event
 
-                # print i_split, nevents, skipEvents, maxEvents
                 dict={'RUNDIR':runDir, 'RELPATH':relPath, 'PILEUP':pileup, 'FILEIN':infile, 'FILEOUT':outfile, 'PROXY':proxyPath, 'OUTPUTDIR':outputDir, 'SKIPEVENTS':str(skipEvents), 'MAXEVENTS':str(maxEvents), 'ISPLIT':str(i_split)}
                 jdfName=condorDir+'/%(RELPATH)s_%(PILEUP)s/%(FILEOUT)s.jdl'%dict ## note: i_split is contained in FILEOUT
-                # print dict
-                # print 'AA:', jdfName
                 jdf=open(jdfName,'w')
                 jdf.write(
                     """x509userproxy = %(PROXY)s
