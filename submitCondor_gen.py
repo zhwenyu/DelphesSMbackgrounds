@@ -61,7 +61,6 @@ for sample in fileList:
     for ifile, file in enumerate(rootfiles):
         infile = file
 
-        count+=1
         tempcount+=1
 
         # print file
@@ -86,7 +85,8 @@ for sample in fileList:
 
         ### split based on the number of events
         for i_split in range(n_jobs):
-
+            
+            count+=1
             ### usual submitter if no splitting
             if not maxEvtsPerJob > -1:
                 outfile = relPath+'_'+str(tempcount)
@@ -114,9 +114,9 @@ Queue 1"""%dict)
                 maxEvents = int(maxEvtsPerJob)
                 skipEvents = int(maxEvtsPerJob*i_split)
                 if i_split == n_jobs-1:
-                   skipEvents = nevents - maxEvtsPerJob*(n_jobs-1) ## up to the last event
+                   maxEvents = nevents - maxEvtsPerJob*(n_jobs-1) ## up to the last event
 
-                # print i_split
+                # print i_split, nevents, skipEvents, maxEvents
                 dict={'RUNDIR':runDir, 'RELPATH':relPath, 'PILEUP':pileup, 'FILEIN':infile, 'FILEOUT':outfile, 'PROXY':proxyPath, 'OUTPUTDIR':outputDir, 'SKIPEVENTS':str(skipEvents), 'MAXEVENTS':str(maxEvents), 'ISPLIT':str(i_split)}
                 jdfName=condorDir+'/%(RELPATH)s_%(PILEUP)s/%(FILEOUT)s.jdl'%dict ## note: i_split is contained in FILEOUT
                 # print dict
@@ -132,7 +132,7 @@ Output = %(FILEOUT)s.out
 Error = %(FILEOUT)s.err
 Log = %(FILEOUT)s.log
 Notification = Never
-Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(PILEUP)s %(MAXEVENTS)s %(SKIPEVENTS)s
+Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(PILEUP)s %(SKIPEVENTS)s %(MAXEVENTS)s
 
 Queue 1"""%dict)
 
