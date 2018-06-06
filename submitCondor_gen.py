@@ -30,33 +30,33 @@ print 'Starting submission'
 count=0
 
 fileList = [  # CHOOSE SAMPLES, you MUST have listed the file names with listFiles.py
-    # 'GluGluToHHTo2B2G_node_2_14TeV-madgraph.txt',
-    # 'GluGluToHHTo2B2G_node_SM_14TeV-madgraph.txt',
-    # 'GluGluToHHTo2B2Tau_node_2_14TeV-madgraph.txt',
-    # 'GluGluToHHTo2B2VTo2L2Nu_node_2_14TeV-madgraph.txt',
-    # 'GluGluToHHTo2B2VTo2L2Nu_node_SM_14TeV-madgraph.txt',
-    # 'GluGluToHHTo4B_node_2_14TeV-madgraph.txt',
-    # 'GluGluToHHTo4B_node_SM_14TeV-madgraph.txt',
+    'GluGluToHHTo2B2G_node_2_14TeV-madgraph.txt',
+    'GluGluToHHTo2B2G_node_SM_14TeV-madgraph.txt',
+    'GluGluToHHTo2B2Tau_node_2_14TeV-madgraph.txt',
+    'GluGluToHHTo2B2VTo2L2Nu_node_2_14TeV-madgraph.txt',
+    'GluGluToHHTo2B2VTo2L2Nu_node_SM_14TeV-madgraph.txt',
+    'GluGluToHHTo4B_node_2_14TeV-madgraph.txt',
+    'GluGluToHHTo4B_node_SM_14TeV-madgraph.txt',
     ######
-    'RSGluonToTTbar_M3000_TuneCUEP8M1_14TeV_pythia8.txt',
-    'RSGluonToTTbar_M4000_TuneCUEP8M1_14TeV_pythia8.txt',
-    'ST_FCNC-TA_Tleptonic_kappa_act-Madgraph5-pythia8.txt',
-    'ST_FCNC-TA_Tleptonic_kappa_aut-Madgraph5-pythia8.txt',
-    'ST_FCNC-TH_Thadronic_HToaa_eta_hct-MadGraph5-pythia8.txt',
-    'ST_FCNC-TH_Thadronic_HToaa_eta_hut-MadGraph5-pythia8.txt',
-    'ST_FCNC-TH_Tleptonic_HToWWZZtautau_eta_hct-MadGraph5-pythia8.txt',
-    'ST_FCNC-TH_Tleptonic_HToWWZZtautau_eta_hut-MadGraph5-pythia8.txt',
-    'ST_FCNC-TH_Tleptonic_HToaa_eta_hct-MadGraph5-pythia8.txt',
-    'ST_FCNC-TH_Tleptonic_HToaa_eta_hut-MadGraph5-pythia8.txt',
-    'ST_FCNC-TH_Tleptonic_HTobb_eta_hct-MadGraph5-pythia8.txt',
-    'ST_FCNC-TH_Tleptonic_HTobb_eta_hut-MadGraph5-pythia8.txt',
-    'ST_FCNC-T_Tleptonic_kappa_gct-MadGraph5-pythia8.txt',
-    'ST_FCNC-T_Tleptonic_kappa_gut-MadGraph5-pythia8.txt',
-    'SingleLQ3ToTauB_5f_madgraph_LO_pair-M500.txt',
-    'SingleLQ3ToTauB_5f_madgraph_LO_pair-M1000.txt',
-    'SingleLQ3ToTauB_5f_madgraph_LO_pair-M1500.txt',
-    'SingleLQ3ToTauB_5f_madgraph_LO_pair-M2000.txt',
-    'SingleLQ3ToTauB_5f_madgraph_LO_pair-M2500.txt',
+    # 'RSGluonToTTbar_M3000_TuneCUEP8M1_14TeV_pythia8.txt',
+    # 'RSGluonToTTbar_M4000_TuneCUEP8M1_14TeV_pythia8.txt',
+    # 'ST_FCNC-TA_Tleptonic_kappa_act-Madgraph5-pythia8.txt',
+    # 'ST_FCNC-TA_Tleptonic_kappa_aut-Madgraph5-pythia8.txt',
+    # 'ST_FCNC-TH_Thadronic_HToaa_eta_hct-MadGraph5-pythia8.txt',
+    # 'ST_FCNC-TH_Thadronic_HToaa_eta_hut-MadGraph5-pythia8.txt',
+    # 'ST_FCNC-TH_Tleptonic_HToWWZZtautau_eta_hct-MadGraph5-pythia8.txt',
+    # 'ST_FCNC-TH_Tleptonic_HToWWZZtautau_eta_hut-MadGraph5-pythia8.txt',
+    # 'ST_FCNC-TH_Tleptonic_HToaa_eta_hct-MadGraph5-pythia8.txt',
+    # 'ST_FCNC-TH_Tleptonic_HToaa_eta_hut-MadGraph5-pythia8.txt',
+    # 'ST_FCNC-TH_Tleptonic_HTobb_eta_hct-MadGraph5-pythia8.txt',
+    # 'ST_FCNC-TH_Tleptonic_HTobb_eta_hut-MadGraph5-pythia8.txt',
+    # 'ST_FCNC-T_Tleptonic_kappa_gct-MadGraph5-pythia8.txt',
+    # 'ST_FCNC-T_Tleptonic_kappa_gut-MadGraph5-pythia8.txt',
+    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M500.txt',
+    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M1000.txt',
+    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M1500.txt',
+    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M2000.txt',
+    # 'SingleLQ3ToTauB_5f_madgraph_LO_pair-M2500.txt',
     ###
     # 'SingleLQ3ToTauB_5f_madgraph_LO_s-channel-M500.txt',
     # 'SingleLQ3ToTauB_5f_madgraph_LO_s-channel-M1000.txt',
@@ -109,7 +109,6 @@ for sample in fileList:
     for ifile, file in enumerate(rootfiles):
         infile = file
 
-        count+=1
         tempcount+=1
 
         # print file
@@ -134,7 +133,8 @@ for sample in fileList:
 
         ### split based on the number of events
         for i_split in range(n_jobs):
-
+            
+            count+=1
             ### usual submitter if no splitting
             if not maxEvtsPerJob > -1:
                 outfile = relPath+'_'+str(tempcount)
@@ -161,9 +161,9 @@ Queue 1"""%dict)
                 maxEvents = int(maxEvtsPerJob)
                 skipEvents = int(maxEvtsPerJob*i_split)
                 if i_split == n_jobs-1:
-                   skipEvents = nevents - maxEvtsPerJob*(n_jobs-1) ## up to the last event
+                   maxEvents = nevents - maxEvtsPerJob*(n_jobs-1) ## up to the last event
 
-                # print i_split
+                # print i_split, nevents, skipEvents, maxEvents
                 dict={'RUNDIR':runDir, 'RELPATH':relPath, 'PILEUP':pileup, 'FILEIN':infile, 'FILEOUT':outfile, 'PROXY':proxyPath, 'OUTPUTDIR':outputDir, 'SKIPEVENTS':str(skipEvents), 'MAXEVENTS':str(maxEvents), 'ISPLIT':str(i_split)}
                 jdfName=condorDir+'/%(RELPATH)s_%(PILEUP)s/%(FILEOUT)s.jdl'%dict ## note: i_split is contained in FILEOUT
                 # print dict
@@ -179,7 +179,7 @@ Output = %(FILEOUT)s.out
 Error = %(FILEOUT)s.err
 Log = %(FILEOUT)s.log
 Notification = Never
-Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(PILEUP)s %(MAXEVENTS)s %(SKIPEVENTS)s
+Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(PILEUP)s %(SKIPEVENTS)s %(MAXEVENTS)s
 
 Queue 1"""%dict)
 
