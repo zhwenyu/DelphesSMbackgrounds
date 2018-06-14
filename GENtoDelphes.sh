@@ -64,14 +64,14 @@ if [[ $XRDEXIT -ne 0 ]]; then
     exit $XRDEXIT
 fi
 
-echo "xrdcp input miniAOD"
+# echo "xrdcp input miniAOD"
 # filein should already be in root://eoscms.cern.ch//store/mc/... format
-xrdcp -f ${FILEIN} delphesinput.root
-XRDEXIT=$?
-if [[ $XRDEXIT -ne 0 ]]; then
-    echo "exit code $XRDEXIT, failure in xrdcp of GEN file"
-    exit $XRDEXIT
-fi
+# xrdcp -f ${FILEIN} delphesinput.root
+# XRDEXIT=$?
+# if [[ $XRDEXIT -ne 0 ]]; then
+#     echo "exit code $XRDEXIT, failure in xrdcp of GEN file"
+#     exit $XRDEXIT
+# fi
 
 setupTime=`date +%s`
 
@@ -81,9 +81,11 @@ setupTime=`date +%s`
 sed -i "s|MAXEVENTS|${MAXEVT}|g" cards/CMS_PhaseII/$detCard
 sed -i "s|SKIPEVENTS|${SKIPEVT}|g" cards/CMS_PhaseII/$detCard
 
-./DelphesCMSFWLite cards/CMS_PhaseII/$detCard ${FILEOUT} delphesinput.root
-if [ $? -ne 0 ]; then
-    exit 16
+./DelphesCMSFWLite cards/CMS_PhaseII/$detCard ${FILEOUT} ${FILEIN}
+DELPHESEXIT=$?
+if [[ $DELPHESEXIT -ne 0 ]]; then
+    echo "exit code $DELPHESEXIT, failure in DelphesCMSFWLite (maybe from xrootd)"
+    exit $DELPHESEXIT
 fi
 
 DelphesTime=`date +%s`
