@@ -56,7 +56,15 @@ time_fail = 0
 for folder in folders:
 
     #to exclude one or more processes:
-    #if 'ST_s-channel_4f_leptonic' not in folder: continue
+    #if 'TTTW_' not in folder: continue
+    # don't resubmit
+    # if 'ST_s-channel_4f_InclusiveDecays' in folder: continue
+    # if 'ST_tW_antitop_5f_inclusiveDecays' in folder: continue
+    # if 'TTWJetsToLNu' in folder: continue
+    # if 'TT_TuneCUETP8M2T4_14TeV-powheg-pythia8-GenJetPt-950GeV' in folder: continue
+    # if 'ZJetsToNuNu_HT-100To200' in folder: continue
+    # if 'ZJetsToNuNu_HT-200To400' in folder: continue
+    # if 'WW_TuneCUETP8M1' in folder: continue
 
     if pileup == '200PU' and '_200PU' not in folder: 
         print 'skipping',folder,', pileup was',pileup
@@ -83,18 +91,26 @@ for folder in folders:
     for file in files:
         total_total+=1
         index = file[file.find('_')+1:file.find('.')]
-        if '_' in index: index = index.split('_')[-1]
-        #if '_' in index: index = index.split('_')[-2]+'_'+index.split('_')[-1]
+        #if '_' in index: index = index.split('_')[-1]
+        if '_' in index: index = index.split('_')[-2]+'_'+index.split('_')[-1]  ## make split submission the default
         count_total += 1
 
         try:
             current = open(dir + '/'+folder+'/'+file.replace('.jdl','.out'),'r')
             copyfail = False
+            delphesfail = False
             for line in current:                                
                 if 'failure in xrdcp' in line: copyfail = True
+                if 'failure in DelphesCMSFWLite' in line: delphesfail = True
             if copyfail:
                 if verbose_level > 0:
                     print '\tXRDCP FAIL:',file,' and JobIndex:',index
+                copy_fail+=1
+                if resub_num == -1 or resub_num == 0: resub_index.append(index)
+                continue
+            if delphesfail:
+                if verbose_level > 0:
+                    print '\tDELPHES FAIL:',file,' and JobIndex:',index
                 copy_fail+=1
                 if resub_num == -1 or resub_num == 0: resub_index.append(index)
                 continue
@@ -142,14 +158,14 @@ for folder in folders:
     savedir = os.getcwd()
     for index in resub_index:
 
-        doSplitting = True
+        doSplitting = False ## assume for now that submission was already split up
         alreadySplit = False
         if 'b' in index: 
-            #doSplitting = False
+            doSplitting = False
             alreadySplit = True
         else:
             if os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl') and os.path.exists(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl'):
-                #doSplitting = False
+                doSplitting = False
                 alreadySplit = True
 
         if not doSplitting:
