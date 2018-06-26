@@ -97,6 +97,7 @@ WhenToTransferOutput = ON_EXIT
 Output = %(FILEOUT)s.out
 Error = %(FILEOUT)s.err
 Log = %(FILEOUT)s.log
+Requirements = (TARGET.TotalCpus == 8)
 Notification = Never
 Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(PILEUP)s
 
@@ -120,6 +121,7 @@ WhenToTransferOutput = ON_EXIT
 Output = %(FILEOUT)s.out
 Error = %(FILEOUT)s.err
 Log = %(FILEOUT)s.log
+Requirements = (TARGET.TotalCpus == 8)
 Notification = Never
 Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(PILEUP)s %(SKIPEVENTS)s %(MAXEVENTS)s
 
