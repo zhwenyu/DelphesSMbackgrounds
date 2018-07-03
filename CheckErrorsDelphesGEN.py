@@ -123,7 +123,7 @@ for folder in folders:
             current = open(dir + '/'+folder+'/'+file.replace('.jdl','.log'),'r')
             toolong = False
             for line in current:
-                if 'SYSTEM_PERIODIC_REMOVE due to job running for more than 2 days' in line:
+                if 'SYSTEM_PERIODIC_REMOVE due to job' in line:
                     toolong = True
             if toolong:
                 if verbose_level > 0:
