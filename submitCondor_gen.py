@@ -11,7 +11,7 @@ start_time = time.time()
 #IO directories must be full paths
 pileup = str(sys.argv[1])
 outputDir='/store/user/snowmass/noreplica/YR_Delphes/Delphes342pre15/'
-## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre14/'  ## For CERN condor
+## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre15/'  ## For CERN condor
 ## outputDir='/store/group/upgrade/delphes_output/YR_Delphes/Delphes342pre14/' ## For DESY (gfal prefix??? See line 52)
 condorDir='/uscms/home/lcadamur/nobackup/Delphes342pre15_logs/' # Change username, helps to match log directory to the ROOT file directory, adding "_logs" (for compatibility with error checker)
 
@@ -40,7 +40,7 @@ for sample in fileList:
     rootfiles = []
     rootfiles_bare = []
     for line in rootlist:
-        rootfiles.append('root://cmsxrootd.fnal.gov/'+line.strip())  ## Can change to whatever is normal for running @ CERN
+        rootfiles.append('root://cmsxrootd.fnal.gov/'+line.strip())
         rootfiles_bare.append(line.strip())
         # OPTIONAL: use a more exact accessor for certain samples at CERN:
         #if(sample != 'WprimeToWZToWhadZinv_narrow_M-600_13TeV-madgraph.txt'): rootfiles.append('root://eoscms.cern.ch/'+line.strip())
@@ -49,11 +49,11 @@ for sample in fileList:
 
     relPath = sample.replace('.txt','')
 
-    os.system('eos root://cmseos.fnal.gov/ mkdir -p '+outputDir+relPath+'_'+pileup)
+    os.system('eos root://cmseos.fnal.gov/ mkdir -p '+outputDir+relPath+'_'+pileup) #For FNAL
     ## os.system('eos root://eoscms.cern.ch/ mkdir -p '+outputDir+relPath+'_'+pileup) # For running @ CERN
     ## os.system('gfal-mkdir -p srm://dcache-se-cms.desy.de/pnfs/desy.de/cms/tier2'+outputDir+relPath+'_'+pileup) ## DESY???
     os.system('mkdir -p '+condorDir+relPath+'_'+pileup)
-    
+
     tempcount = 0;
     for ifile, file in enumerate(rootfiles):
         infile = file
@@ -78,7 +78,7 @@ for sample in fileList:
 
         ### split based on the number of events
         for i_split in range(n_jobs):
-            
+
             count+=1
             ### usual submitter if no splitting
             if not maxEvtsPerJob > -1:
@@ -130,7 +130,7 @@ Queue 1"""%dict)
             jdf.close()
             os.chdir('%s/%s_%s'%(condorDir,relPath,pileup))
             os.system('condor_submit %(FILEOUT)s.jdl'%dict)
-            os.system('sleep 0.5')                                
+            os.system('sleep 0.5')
             os.chdir('%s'%(runDir))
             print str(count), "jobs submitted!!!"
 
