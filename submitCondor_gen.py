@@ -40,8 +40,7 @@ for sample in fileList:
     rootfiles = []
     rootfiles_bare = []
     for line in rootlist:
-        rootfiles.append('root://cmsxrootd.fnal.gov/'+line.strip())  ## For FNAL
-        #rootfiles.append('root://cms-xrd-global.cern.ch/'+line.strip())  ## For CERN
+        rootfiles.append('root://cmsxrootd.fnal.gov/'+line.strip())
         rootfiles_bare.append(line.strip())
         # OPTIONAL: use a more exact accessor for certain samples at CERN:
         #if(sample != 'WprimeToWZToWhadZinv_narrow_M-600_13TeV-madgraph.txt'): rootfiles.append('root://eoscms.cern.ch/'+line.strip())
