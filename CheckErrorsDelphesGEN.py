@@ -153,7 +153,7 @@ for folder in folders:
             if resub_num == -1 or resub_num == 3: resub_index.append(index)
             continue
 
-
+    print 'Percent done =',float(finished)/float(len(files))
     if resub_index != []: print 'RESUBS:', resub_index
     if resubmit != '1': continue
 
