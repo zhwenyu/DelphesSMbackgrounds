@@ -90,6 +90,7 @@ for folder in folders:
     resub_index = []
     resub_index_walltime = []
     count_total = 0
+    finished = 0
     for file in files:
         total_total+=1
         index = file[file.find('_')+1:file.find('.')]
@@ -104,6 +105,7 @@ for folder in folders:
             for line in current:
                 if 'failure in xrdcp' in line: copyfail = True
                 if 'failure in DelphesCMSFWLite' in line: delphesfail = True
+                if 'removing inputs' in line: finished += 1
             if copyfail:
                 if verbose_level > 0:
                     print '\tXRDCP FAIL:',file,' and JobIndex:',index
