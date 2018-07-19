@@ -12,8 +12,7 @@
 
 
 import os, sys, getopt,subprocess
-execfile("/uscms_data/d3/jmanagan/EOSSafeUtils.py")
-#execfile("./EOSSafeUtilsOutputAtCERN.py")
+execfile("/uscms_data/d3/jmanagan/UpgradeStudies/DelphesSMbackgrounds/EOSSafeUtils.py")
 dir = sys.argv[1]
 
 print; print 'Checking logs in', dir
@@ -38,8 +37,9 @@ for o, a in opts:
         if o == '--pileup': pileup = str(a)
 
 print 'Pileup setting:',pileup
-rootdir = '/eos/uscms/store/user/snowmass/noreplica/YR_Delphes/'+dir.split('/')[-2]+'/'
-#rootdir = '/eos/cms/store/group/upgrade/delphes_output/YR_Delphes/'+dir.split('/')[-2]+'/' #CERN
+#rootdir = '/eos/uscms/store/user/snowmass/noreplica/YR_Delphes/'+dir.split('/')[-2]+'/'
+rootdir = '/store/group/upgrade/delphes_output/YR_Delphes/'+dir.split('/')[-2]+'/'
+#rootdir = rootdir.replace('_logs_batch-02','')
 rootdir = rootdir.replace('_logs','')
 print 'checking ROOT files in:',rootdir
 folders = [x for x in os.walk(dir).next()[1]]
@@ -67,6 +67,7 @@ for folder in folders:
     # if 'ZJetsToNuNu_HT-100To200' in folder: continue
     # if 'ZJetsToNuNu_HT-200To400' in folder: continue
     # if 'WW_TuneCUETP8M1' in folder: continue
+    #if 'DiPhotonJetsBox' not in folder and 'THQ_Hincl' not in folder and 'VBF_LFV_HToMuTau' not in folder and 'ttHTobb_M125' not in folder and 'RSGluonToTTbar' not in folder and 'TT_Mtt1000toInf' not in folder and 'WWG' not in folder and 'ZZTo4L' not in folder: continue
 
     if pileup == '200PU' and '_200PU' not in folder:
         print 'skipping',folder,', pileup was',pileup
@@ -78,9 +79,10 @@ for folder in folders:
         print 'skipping',folder,', pileup was', pileup
         continue
 
-    if verbose_level > 0:  print; print folder
+    print; print folder
 
-    rootfiles = EOSlist_root_files(rootdir+folder)
+    #rootfiles = EOSlist_root_files(rootdir+folder)
+    rootfiles = GFALlist_root_files(rootdir+folder)
     total_roots += len(rootfiles)
 
     files = [x for x in os.listdir(dir+'/'+folder) if '.jdl' in x]
@@ -101,14 +103,23 @@ for folder in folders:
         try:
             current = open(dir + '/'+folder+'/'+file.replace('.jdl','.out'),'r')
             copyfail = False
+            transferfail = False
             delphesfail = False
             for line in current:
-                if 'failure in xrdcp' in line: copyfail = True
+                if 'failure in xrdcp of MinBias' in line: copyfail = True
+                if 'failure in xrdcp of Delphes' in line: copyfail = True
+                if 'failure in xrdcp of ROOT' in line: transferfail = True
                 if 'failure in DelphesCMSFWLite' in line: delphesfail = True
                 if 'removing inputs' in line: finished += 1
             if copyfail:
                 if verbose_level > 0:
                     print '\tXRDCP FAIL:',file,' and JobIndex:',index
+                copy_fail+=1
+                if resub_num == -1 or resub_num == 0: resub_index.append(index)
+                continue
+            if transferfail:
+                if verbose_level > 0:
+                    print '\tGFAL FAIL:',file,' and JobIndex:',index
                 copy_fail+=1
                 if resub_num == -1 or resub_num == 0: resub_index.append(index)
                 continue
@@ -124,12 +135,21 @@ for folder in folders:
         try:
             current = open(dir + '/'+folder+'/'+file.replace('.jdl','.log'),'r')
             toolong = False
+            memfail = False
             for line in current:
-                if 'SYSTEM_PERIODIC_REMOVE due to job' in line:
+                if 'SYSTEM_PERIODIC_REMOVE due to job running for more than 2 days' in line:
                     toolong = True
+                if 'SYSTEM_PERIODIC_REMOVE due to job exceeding requested memory' in line:
+                    memfail = True
             if toolong:
                 if verbose_level > 0:
                     print '\tWALLTIME FAIL:',file,' and JobIndex:',index
+                time_fail+=1
+                if resub_num == -1 or resub_num == 1: resub_index.append(index)
+                continue
+            if memfail:
+                if verbose_level > 0:
+                    print '\tMEMORY FAIL:',file,' and JobIndex:',index
                 time_fail+=1
                 if resub_num == -1 or resub_num == 1: resub_index.append(index)
                 continue
@@ -141,13 +161,14 @@ for folder in folders:
             if '_'+index+'.root' in rootfile: thisroot = rootfile
 
         if thisroot != '':
-            zerosize = EOSisZeroSizefile(rootdir+folder+'/'+thisroot,'Jun')
-            if zerosize:
-                if verbose_level > 0:
-                    print '\tZERO SIZE:',file,' and JobIndex:',index
-                size_fail+=1
-                if resub_num == -1 or resub_num == 2: resub_index.append(index)
-                continue
+            continue
+            # zerosize = EOSisZeroSizefile(rootdir+folder+'/'+thisroot,'Jun')
+            # if zerosize:
+            #     if verbose_level > 0:
+            #         print '\tZERO SIZE:',file,' and JobIndex:',index
+            #     size_fail+=1
+            #     if resub_num == -1 or resub_num == 2: resub_index.append(index)
+            #     continue
         else:
             if verbose_level > 0:
                 print '\tNO ROOT:',file,' and JobIndex:',index
@@ -163,7 +184,10 @@ for folder in folders:
     for index in resub_index:
 
         doSplitting = False ## assume for now that submission was already split up
-        alreadySplit = False
+        alreadySplit = True
+
+        #if resub_num == 1: doSplitting = True
+
         if 'b' in index:
             doSplitting = False
             alreadySplit = True
@@ -232,7 +256,7 @@ for folder in folders:
                 os.chdir(savedir)
 
             else:
-                print 'Is split: splitting '+index+'.jdl into '+index+'.jdl and '+index+'c.jdl'
+                print 'Is split: splitting '+index+'.jdl into '+index+'.jdl and '+index+'b.jdl'
                 command = "grep 'Arguments' "+dir+"/"+folder+"/"+folder.replace("_"+pileup,"")+"_"+index+".jdl"
                 proc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
                 (args, err) = proc.communicate()
@@ -255,23 +279,26 @@ for folder in folders:
                 f.close()
 
                 name = folder.replace('_'+pileup,'')+'_'+index
-                newname = folder.replace('_'+pileup,'')+'_'+index+'c'
+                newname = folder.replace('_'+pileup,'')+'_'+index+'b'
 
                 with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl','w') as fout:
                     for line in jdllines:
                         if 'Argument' in line: line = line.replace(' '+str(origskip)+' '+str(origmax),' '+str(origskip)+' '+str(newmax))
                         fout.write(line)
 
-                with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'c.jdl','w') as fout:
+                with open(dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl','w') as fout:
                     for line in jdllines:
                         if 'Argument' in line: line = line.replace(' '+str(origskip)+' '+str(origmax),' '+str(newskip)+' '+str(newmax))
                         if name in line: line = line.replace(name,newname)
+                        if '_2b00PU' in line: line = line.replace('_2b00PU','_200PU')
+                        if '_20b0PU' in line: line = line.replace('_20b0PU','_200PU')
+                        if '_200bPU' in line: line = line.replace('_200bPU','_200PU')
                         fout.write(line)
 
                 os.chdir(dir+'/'+folder)
                 os.system('rm '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+ '_'+index+'.log')
                 os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'.jdl')
-                os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'c.jdl')
+                os.system('condor_submit '+dir+'/'+folder+'/'+folder.replace('_'+pileup,'')+'_'+index+'b.jdl')
                 os.chdir(savedir)
 
 
@@ -279,7 +306,7 @@ print
 print 'TOTAL JOBS: ', total_total
 print 'ROOT files:', total_roots
 print 'COPY FAIL:', copy_fail
-print 'WALLTIME FAIL:', time_fail
+print 'SYSTEM REMOVE:', time_fail
 print 'ZERO SIZE:', size_fail
 print 'NO ROOTS:', no_roots
 print 'DONE:', total_total - copy_fail - time_fail - no_roots - size_fail
