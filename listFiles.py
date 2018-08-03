@@ -2,6 +2,28 @@ import os,sys
 
 samplelist = [
 
+    ## New on 8/3/18
+    # Juliette
+    '/DYJetsToLL_1J_M-10to50_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', # 40M
+    '/WWWTo3L3Nu_aQGC_TuneCUEP8M2T4_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 1M
+
+    # Luca
+    '/DYJetsToLL_M-10to50_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', # 100M? Maybe has "ext" sample?
+
+    # Wenyu
+    '/ZZTo4L_0Jets_ZZOnShell_14TeV-amcatnloFXFX-madspin-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', # ? no gdoc?
+    '/ZZTo4L_1Jets_ZZOnShell_14TeV-amcatnloFXFX-madspin-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', # ? no gdoc?
+    '/ZPrimeToTTJets_M_4000GeV_W120GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 400k
+
+    # Basil (extension of existing)
+    '/QCD_Pt-15to7000_MuEnrichedPt5_TuneCUETP8M1_14TeV_pythia8/PhaseIISummer17GenOnly-93X_upgrade2023_realistic_v5_ext1-v1/GEN', # 60M
+    
+    # Julie
+    '/TTTT_TuneCUETP8M2_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5_ext1-v3/GEN', # < 10M
+    '/TGJets_14TeV-amcatnlo-madspin-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5_ext1-v2/GEN', # 1.5M
+    '/VLF_MF_100_MS_95_BRmu50_BRtau50_TuneCUETP8M1_14TeV_madgraph_pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', # 500k
+    '/VLF_MF_150_MS_140_BRmu50_BRtau50_TuneCUETP8M1_14TeV_madgraph_pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', # 500k
+
     ## New on 7/19/18
     # Wenyu
     '/DYJetsToLL_M-100_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', # 20M
