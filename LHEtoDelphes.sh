@@ -26,7 +26,7 @@ runEvents=-1
 skipEvents=0
 detCard=CMS_PhaseII_${PILEUP}_v03.tcl
 energy=14
-DelphesVersion=tags/3.4.2pre12
+DelphesVersion=tags/3.4.2pre15
 nPU=`echo $detCard | cut -d '_' -f 2`
 process=`echo $FILENAME | cut -d '_' -f 1-2`
 phase=`echo $detCard | cut -d '_' -f 1`
@@ -41,15 +41,15 @@ eval `scram runtime -sh`
 cd -
 
 echo "xrdcp source tarball and pileup file"
-xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes342pre12.tar . #CHECK ME!
+xrdcp -f root://cmseos.fnal.gov//store/user/snowmass/DelphesSubmissionLPCcondor/Delphes342pre15.tar . #CHECK ME!
 XRDEXIT=$?
 if [[ $XRDEXIT -ne 0 ]]; then
     echo "exit code $XRDEXIT, failure in xrdcp of Delphes.tar"
     exit $XRDEXIT
 fi
 
-tar -xf Delphes342pre12.tar
-rm Delphes342pre12.tar
+tar -xf Delphes342pre15.tar
+rm Delphes342pre15.tar
 cd delphes
 #./configure
 #make -j 4

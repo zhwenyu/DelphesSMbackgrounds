@@ -57,7 +57,7 @@ for sample in fileList:
         infile = file
 
         tempcount+=1
-        if tempcount > 296: continue   # OPTIONAL to submit a test job
+        #if tempcount > 296: continue   # OPTIONAL to submit a test job or control submission groups
         #if tempcount <= 296: continue
 
         fname_bare = rootfiles_bare[ifile]

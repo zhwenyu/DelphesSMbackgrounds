@@ -87,9 +87,12 @@ for sample in dirList:
     process = sample.split('-')[0]
     if process == 'Bjj': process = 'Bjj-vbf'    
 
+    ### FIGURE OUT YOUR XQCUT 
     xqcut = 40
     if 't' in process: xqcut = 60
     if 'tt' in process: xqcut = 80
+        
+    ### FIGURE OUT YOUR N ADDITIONAL JETS (ex: p p -> t t j j j gives maxjets = 3)
     maxjets = 2
     if process == 'BBB' or process == 'LLB' or process == 'ttB': maxjets = 1
     if process == 'Bj' or process == 'Bjj-vbf' or process == 'H' or process =='tj': maxjets = 3
@@ -124,6 +127,7 @@ WhenToTransferOutput = ON_EXIT
 Output = %(FILENAME)s.out
 Error = %(FILENAME)s.err
 Log = %(FILENAME)s.log
+Requirements = (TARGET.TotalCpus == 8)
 Notification = Never
 Arguments = %(INPUTDIR)s/%(RELPATH)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILENAME)s.lhe %(QCUT)s %(JETS)s %(PILEUP)s
 
