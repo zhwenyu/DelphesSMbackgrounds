@@ -2,6 +2,16 @@ import os,sys
 
 samplelist = [
 
+    ## New on 8/16/18
+    # Claim on skype chat
+    '/QCD_HT1000to1500_BGenFilter_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 10M
+    '/TTGG_0Jets_TuneCUETP8M1_14TeV_amcatnlo_madspin_pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 40M
+    '/WJetsToQQ_HT180toInf_14TeV-madgraphMLM-pythia8_GenPt_250GeV/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 10M
+    '/ZPrimeToTTJets_M_10000GeV_W3000GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 400k
+
+    # Julie
+    '/QCD_Pt-5toInf_EMEnriched_TuneCUETP8M1_14TeV_pythia8/PhaseIISummer17GenOnly-93X_upgrade2023_realistic_v5-v1/GEN', # 120M
+
     ## New on 8/3/18
     # Juliette
     '/DYJetsToLL_1J_M-10to50_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', # 40M
