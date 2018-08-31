@@ -2,8 +2,19 @@ import os,sys
 
 samplelist = [
 
-    ## New on 8/16/18
+    ## New on 8/31/18
     # Claim on skype chat
+    '/GluGluToHHTo2B2ZTo4L_node_SM_14TeV-madgraph/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 500k
+    '/TTbarDMJets_DiLept_pseudoscalar_2_NLO_Mchi-1_Mphi-10_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 600k
+    '/TtbarDMJets_DiLept_pseudoscalar_2_NLO_Mchi-1_Mphi-50_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 600k
+    '/TtbarDMJets_DiLept_scalar_2_NLO_Mchi-1_Mphi-10_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 600k
+    '/TtbarDMJets_DiLept_scalar_2_NLO_Mchi-1_Mphi-300_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 600k
+    '/TtbarDMJets_DiLept_scalar_2_NLO_Mchi-1_Mphi-50_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 600k
+    '/VBFHHToHHTo2B2ZTo4L_CV_1_C2V_1_C3_1_14TeV-madgraph/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 500k?
+    '/ZPrimeToTTJets_M_2000GeV_W20GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 400k
+
+    ## New on 8/16/18
+    # Claim on skype chat -- Basil
     '/QCD_HT1000to1500_BGenFilter_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 10M
     '/TTGG_0Jets_TuneCUETP8M1_14TeV_amcatnlo_madspin_pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 40M
     '/WJetsToQQ_HT180toInf_14TeV-madgraphMLM-pythia8_GenPt_250GeV/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 10M
