@@ -1,6 +1,29 @@
 import os,sys
 
 samplelist = [
+
+    ## New on 9/17/18
+
+    # Basil
+    '/DYJetsToLL_2J_M-10to50_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 40M
+
+    # Wenyu
+    '/QCD_HT500to700_BGenFilter_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 10M
+    '/QCD_HT700to1000_BGenFilter_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 10M
+    
+    # Luca - 600k each
+    '/TtbarDMJets_DiLept_pseudoscalar_2_NLO_Mchi-1_Mphi-100_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN',
+    '/TtbarDMJets_DiLept_pseudoscalar_2_NLO_Mchi-1_Mphi-200_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN',
+    '/TtbarDMJets_DiLept_pseudoscalar_2_NLO_Mchi-1_Mphi-20_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN',
+    '/TtbarDMJets_DiLept_scalar_2_NLO_Mchi-1_Mphi-100_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN',
+    '/TtbarDMJets_DiLept_scalar_2_NLO_Mchi-1_Mphi-20_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN',
+    
+    # Juliette
+    '/VBFHHTo2B2G_CV_1_C2V_1_C3_1_14TeV-madgraph/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 500k
+    '/VBFHHTo4B_CV_1_C2V_1_C3_1_14TeV-madgraph/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 500k
+    '/VBFHHToHHTo2B2VTo2L2Nu_CV_1_C2V_1_C3_1_14TeV-madgraph/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 500k
+    '/ZATo2LA01j_5f_pta130_14TeV_NLO_FXFX/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', # 1M
+
     
     ## New on 9/7/18
 
