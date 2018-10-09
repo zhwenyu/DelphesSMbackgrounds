@@ -2,6 +2,17 @@ import os,sys
 
 samplelist = [
 
+    ## New on 10/9/18
+    # Julie
+    '/WJetsToLNu_GenMET-100_TuneCUETP8M1_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', #80M
+
+    # Wenyu
+    '/QCD_HT50to100_BGenFilter_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', #10M
+    '/DYJetsToLL_3J_M-10to50_TuneCUEP8M2T4_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN', #40M
+
+    # Luca
+    '/TtbarDMJets_DiLept_pseudoscalar_2_NLO_Mchi-1_Mphi-500_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v2/GEN', # 600k
+
     ## New on 9/25/18
     # Julie
     '/DYJetsToQQ_HT180toInf_14TeV-madgraphMLM-pythia8_GenPt_500GeV/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',#10M
