@@ -2,6 +2,25 @@ import os,sys
 
 samplelist = [
 
+    ## New on 10/12/18
+    # Julie
+    '/DYJetsToQQ_HT180toInf_14TeV-madgraphMLM-pythia8_GenPt_250GeV/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+
+    # Basil
+    '/ZPrimeToTTJets_M_2000GeV_W600GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    '/ZPrimeToTTJets_M_2000GeV_W60GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    '/ZPrimeToTTJets_M_3000GeV_W900GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    '/ZPrimeToTTJets_M_3000GeV_W90GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    '/ZPrimeToTTJets_M_4000GeV_W1200GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    
+    # Juliette
+    '/ZPrimeToTTJets_M_4000GeV_W40GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    '/ZPrimeToTTJets_M_5000GeV_W1500GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    '/ZPrimeToTTJets_M_5000GeV_W150GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    '/ZPrimeToTTJets_M_6000GeV_W1800GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    '/ZPrimeToTTJets_M_6000GeV_W180GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+    '/ZPrimeToTTJets_M_8000GeV_W2400GeV_TuneCUETP8M1_14TeV-madgraph-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v4/GEN',
+
     ## New on 10/9/18
     # Julie
     '/WJetsToLNu_GenMET-100_TuneCUETP8M1_14TeV-madgraphMLM-pythia8/PhaseIISummer17wmLHEGENOnly-93X_upgrade2023_realistic_v5-v1/GEN', #80M
