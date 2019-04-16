@@ -94,6 +94,8 @@ Log = %(FILEOUT)s.log
 Requirements = (TARGET.TotalCpus == 8)
 Notification = Never
 Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(PILEUP)s 0 100
+request_disk = 2000 Mb
++MaxWallTimeMins = 2800
 
 Queue 1"""%dict)
             else:
@@ -118,6 +120,8 @@ Log = %(FILEOUT)s.log
 Requirements = (TARGET.TotalCpus == 8)
 Notification = Never
 Arguments = %(FILEIN)s %(OUTPUTDIR)s/%(RELPATH)s_%(PILEUP)s %(FILEOUT)s.root %(PILEUP)s %(SKIPEVENTS)s %(MAXEVENTS)s
+request_disk = 2000 Mb
++MaxWallTimeMins = 2800
 
 Queue 1"""%dict)
 
